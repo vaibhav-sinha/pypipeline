@@ -6,4 +6,7 @@ class Processor:
     def process(self, exchange):
         self.object.process(exchange)
         if self.next is not None:
-            self.next.process(exchange)
+            try:
+                self.next.process(exchange)
+            except Exception as e:
+                raise e

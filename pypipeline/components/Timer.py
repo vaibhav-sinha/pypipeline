@@ -39,3 +39,4 @@ class TimerThread(threading.Thread):
             exchange.in_msg = message
             self.source.chain.process(exchange)
             self.count += 1
+        print("Timer shutting down")
