@@ -3,6 +3,9 @@ from urllib.parse import parse_qs
 from .Channel import Channel
 from .Processor import Processor
 from .Status import Status
+from .Destination import Destination
+from pypipeline.eip.split.Splitter import Splitter
+from pypipeline.eip.split.SplitterProcessor import SplitterProcessor
 
 
 class Pipeline:
@@ -22,8 +25,12 @@ class Pipeline:
                 destination_params = parse_qs(destination[1].query)
             else:
                 destination_params = {}
-            destination_obj = destination[0](plumber, destination_params)
-            processor = Processor(destination_obj)
+            if issubclass(destination[0], Destination):
+                destination_obj = destination[0](plumber, destination_params)
+                processor = Processor(destination_obj)
+            if issubclass(destination[0], Splitter):
+                destination_obj = destination[0]()
+                processor = SplitterProcessor(destination_obj)
             channel.next = processor
             if self.transient_previous is not None:
                 self.transient_previous.next = channel

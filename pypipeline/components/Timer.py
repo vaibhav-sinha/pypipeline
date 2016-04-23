@@ -12,7 +12,7 @@ class Timer(Source):
         self.thread = None
 
     def start(self):
-        self.thread = TimerThread(self)
+        self.thread = TimerThread(self, self.plumber)
         self.thread.start()
 
     def stop(self):
@@ -20,11 +20,12 @@ class Timer(Source):
 
 
 class TimerThread(threading.Thread):
-    def __init__(self, source):
+    def __init__(self, source, plumber):
         super().__init__()
         self.stopped = False
         self.source = source
         self.period = source.period
+        self.plumber = plumber
         self.count = 0
 
     def stop(self):
@@ -33,7 +34,7 @@ class TimerThread(threading.Thread):
     def run(self):
         while not self.stopped:
             time.sleep(self.period)
-            exchange = Exchange()
+            exchange = self.plumber.create_exchange()
             message = Message()
             message.body = "This is exchange" + str(self.count)
             exchange.in_msg = message

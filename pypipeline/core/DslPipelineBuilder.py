@@ -3,7 +3,8 @@ from . import EndpointRegistry
 from .Pipeline import Pipeline
 from .Source import Source
 from .Destination import Destination
-from.PipelineBuilder import PipelineBuilder
+from .PipelineBuilder import PipelineBuilder
+from pypipeline.eip.split.Splitter import Splitter
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -29,6 +30,14 @@ class DslPipelineBuilder(PipelineBuilder):
         assert callable(method), "You need to provide a callable function"
         assert self.source_class is not None, "Pipeline definition must start with a source"
         to_class = type("", (Destination,), {"process": lambda self, exchange: method(exchange)})
+        uri = None
+        self.to_list.append((to_class, uri))
+        return self
+
+    def split(self, method):
+        assert callable(method), "You need to provide a callable function"
+        assert self.source_class is not None, "Pipeline definition must start with a source"
+        to_class = type("", (Splitter,), {"split": lambda self, exchange: method(exchange)})
         uri = None
         self.to_list.append((to_class, uri))
         return self
