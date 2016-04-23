@@ -1,6 +1,8 @@
 import unittest
 from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
 from pypipeline.core import EndpointRegistry
+from pypipeline.core.Source import Source
+from pypipeline.core.Destination import Destination
 import inspect
 
 
@@ -33,16 +35,21 @@ class DslPipelineDefinitionBuilderTest(unittest.TestCase):
         with self.assertRaises(AssertionError):
             builder.source("to1://t1").source("to1://t2")
 
+    def test_build_pipeline(self):
+        builder = DslPipelineBuilder()
+        pipeline = builder.source("source1://test?name=s1").to("to1://t1").to("to2://t2").build()
+        self.assertIsNotNone(pipeline.source.chain)
 
-class Source1:
+
+class Source1(Source):
     pass
 
 
-class To1:
+class To1(Destination):
     pass
 
 
-class To2:
+class To2(Destination):
     pass
 
 if __name__ == '__main__':

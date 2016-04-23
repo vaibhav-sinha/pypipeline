@@ -5,4 +5,5 @@ class Processor:
 
     def process(self, exchange):
         self.object.process(exchange)
-        self.next.process(exchange)
+        if self.next is not None:
+            self.next.process(exchange)

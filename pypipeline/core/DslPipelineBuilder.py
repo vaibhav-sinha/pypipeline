@@ -2,6 +2,7 @@ from urllib.parse import urlparse
 from . import EndpointRegistry
 from .Pipeline import Pipeline
 from .Source import Source
+from .Destination import Destination
 
 
 class DslPipelineBuilder:
@@ -32,7 +33,7 @@ class DslPipelineBuilder:
     def process(self, method):
         assert callable(method), "You need to provide a callable function"
         assert self.source_class is not None, "Pipeline definition must start with a source"
-        to_class = type("", (object,), {"process": lambda self, exchange: method(exchange)})
+        to_class = type("", (Destination,), {"process": lambda self, exchange: method(exchange)})
         uri = None
         self.to_list.append((to_class, uri))
         return self
@@ -42,4 +43,4 @@ class DslPipelineBuilder:
 
     def build(self):
         assert len(self.to_list) > 0, "Pipeline needs to have atleast one destination"
-        return Pipeline(self.source_class, self.id, self.source_uri, self.to_list)
+        return Pipeline(self.id, self.source_class, self.source_uri, self.to_list)
