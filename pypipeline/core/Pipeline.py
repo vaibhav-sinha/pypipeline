@@ -6,6 +6,8 @@ from .Status import Status
 from .Destination import Destination
 from pypipeline.eip.split.Splitter import Splitter
 from pypipeline.eip.split.SplitterProcessor import SplitterProcessor
+from pypipeline.eip.filter.Filter import Filter
+from pypipeline.eip.filter.FilterProcessor import FilterProcessor
 
 
 class Pipeline:
@@ -31,6 +33,9 @@ class Pipeline:
             if issubclass(destination[0], Splitter):
                 destination_obj = destination[0]()
                 processor = SplitterProcessor(destination_obj)
+            if issubclass(destination[0], Filter):
+                destination_obj = destination[0]()
+                processor = FilterProcessor(destination_obj)
             channel.next = processor
             if self.transient_previous is not None:
                 self.transient_previous.next = channel

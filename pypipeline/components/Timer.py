@@ -36,7 +36,7 @@ class TimerThread(threading.Thread):
             time.sleep(self.period)
             exchange = self.plumber.create_exchange()
             message = Message()
-            message.body = "This is exchange" + str(self.count)
+            message.body = "This is exchange " + str(self.count)
             exchange.in_msg = message
             self.source.chain.process(exchange)
             self.count += 1
