@@ -1,0 +1,2 @@
+class PipelineContext :
+    pass
