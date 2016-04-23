@@ -6,8 +6,8 @@ from pypipeline.core.Message import Message
 
 
 class Timer(Source):
-    def __init__(self, params):
-        super().__init__(params)
+    def __init__(self, plumber, params):
+        super().__init__(plumber, params)
         self.period = float(params["period"][0])
         self.thread = None
 

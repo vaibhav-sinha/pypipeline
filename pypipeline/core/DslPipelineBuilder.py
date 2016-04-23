@@ -3,15 +3,10 @@ from . import EndpointRegistry
 from .Pipeline import Pipeline
 from .Source import Source
 from .Destination import Destination
+from.PipelineBuilder import PipelineBuilder
 
 
-class DslPipelineBuilder:
-
-    def __init__(self):
-        self.source_class = None
-        self.source_uri = None
-        self.to_list = []
-        self.id = None
+class DslPipelineBuilder(PipelineBuilder):
 
     def source(self, endpoint):
         assert isinstance(endpoint, str), "You need to provide an endpoint uri"
@@ -41,6 +36,13 @@ class DslPipelineBuilder:
     def id(self, name):
         self.id = name
 
+    def auto_start(self, value):
+        assert isinstance(value, bool), "auto_start parameter accepts only boolean values"
+        self.auto_start = value
+
     def build(self):
+        return self.buildWithPlumber(None)
+
+    def buildWithPlumber(self, plumber):
         assert len(self.to_list) > 0, "Pipeline needs to have atleast one destination"
-        return Pipeline(self.id, self.source_class, self.source_uri, self.to_list)
+        return Pipeline(self, plumber)
