@@ -9,6 +9,7 @@ from .PipelineBuilder import PipelineBuilder
 from pypipeline.eip.split.Splitter import Splitter
 from pypipeline.eip.filter.Filter import Filter
 from pypipeline.eip.multicast.Multicast import Multicast
+from pypipeline.eip.aggregate.Aggregator import Aggregator
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -59,9 +60,22 @@ class DslPipelineBuilder(PipelineBuilder):
         self.builder_stack[-1].to_list.append((to_class, uri))
         return self
 
+    def aggregate(self, params):
+        assert "method" in params, "You need to provide the method to use for aggregation"
+        assert callable(params["method"]), "You need to provide a callable method"
+        assert ~("timeout" not in params and "count" not in params), "You need to provide atlease one termination condition: timeout, count"
+        to_class = type("", (Aggregator,), {"aggregate": lambda self, old_exchange, current_exchange: params["method"](old_exchange, current_exchange)})
+        self.builder_stack[-1].to_list.append((to_class, params))
+        return self
+
     def multicast(self, params):
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         assert isinstance(params, dict)
+        if "aggregate_method" in params:
+            aggregate_class = type("", (Aggregator,), {"aggregate": lambda self, old_exchange, current_exchange: params["aggregate_method"](old_exchange, current_exchange)})
+        else:
+            aggregate_class = Aggregator
+        params["aggregator"] = aggregate_class
         self.destination_stack.append({"type": Multicast, "params": params})
         return self
 

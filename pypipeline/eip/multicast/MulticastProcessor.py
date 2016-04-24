@@ -8,18 +8,19 @@ class MulticastProcessor(Processor):
     def __init__(self, multicast):
         super().__init__(None)
         self.multicast = multicast
+        self.aggregator = multicast.params["aggregator"](multicast.plumber, {})
         self.pipelines = []
         for builder in self.multicast.params["pipelines"]:
             self.pipelines.append(builder.build_with_plumber(multicast.plumber))
 
     def _process(self, exchange):
-        last = None
+        previous = None
         for pipeline in self.pipelines:
             to_send = self.copy_exchange(exchange)
             pipeline.source.chain.process(to_send)
-            last = to_send
+            previous = self.aggregator.aggregate(previous, to_send)
         if self.next is not None:
-            self.next.process(last)
+            self.next.process(previous)
 
     def copy_exchange(self, ex):
         exchange = copy.copy(ex)

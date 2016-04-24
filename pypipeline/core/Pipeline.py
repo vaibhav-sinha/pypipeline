@@ -10,6 +10,8 @@ from pypipeline.eip.filter.Filter import Filter
 from pypipeline.eip.filter.FilterProcessor import FilterProcessor
 from pypipeline.eip.multicast.Multicast import Multicast
 from pypipeline.eip.multicast.MulticastProcessor import MulticastProcessor
+from pypipeline.eip.aggregate.Aggregator import Aggregator
+from pypipeline.eip.aggregate.AggregatorProcessor import AggregatorProcessor
 
 
 class Pipeline:
@@ -38,6 +40,9 @@ class Pipeline:
             if issubclass(destination[0], Filter):
                 destination_obj = destination[0](plumber)
                 processor = FilterProcessor(destination_obj)
+            if issubclass(destination[0], Aggregator):
+                destination_obj = destination[0](plumber, destination[1])
+                processor = AggregatorProcessor(destination_obj)
             if destination[0] == Multicast:
                 destination_obj = destination[0](plumber, destination[1])
                 processor = MulticastProcessor(destination_obj)
