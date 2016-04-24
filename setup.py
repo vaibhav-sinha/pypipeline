@@ -41,7 +41,5 @@ Detects
 This version requires Python 3 or later; a Python 2 version is available separately.
 """,
     install_requires=[
-        "yaml",
-        "urlparse3"
     ],
 )
