@@ -9,7 +9,7 @@ class BasicPipelineExecutionTest(unittest.TestCase):
 
     def test_simple_pipeline(self):
         builder = DslPipelineBuilder()
-        pipeline = builder.source({"endpoint": Timer, "period": 2.0}).to({"endpoint": MessageModifier}).process(lambda ex: print(ex.in_msg.body)).build()
+        pipeline = builder.source(Timer, {"period": 2.0}).to(MessageModifier).process(lambda ex: print(ex.in_msg.body)).build()
         pipeline.start()
         time.sleep(10)
         pipeline.stop()

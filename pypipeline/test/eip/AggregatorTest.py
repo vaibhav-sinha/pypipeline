@@ -10,7 +10,7 @@ class AggregatorTest(unittest.TestCase):
     def test_simple_pipeline(self):
         plumber = Plumber()
         builder1 = DslPipelineBuilder()
-        pipeline1 = builder1.source({"endpoint": Timer, "period": 1.0}).aggregate({"method": aggregate, "count": 5, "timeout": 2}).process(lambda ex: print(ex.in_msg.body))
+        pipeline1 = builder1.source(Timer, {"period": 1.0}).aggregate({"method": aggregate, "count": 5, "timeout": 2}).process(lambda ex: print(ex.in_msg.body))
         plumber.add_pipeline(pipeline1)
         plumber.start()
         time.sleep(12)

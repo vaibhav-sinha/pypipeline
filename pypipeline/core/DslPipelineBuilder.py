@@ -1,5 +1,3 @@
-from urllib.parse import urlparse
-
 from pypipeline.core.DummySource import DummySource
 from .Pipeline import Pipeline
 from .Source import Source
@@ -20,18 +18,22 @@ class DslPipelineBuilder(PipelineBuilder):
         self.builder_stack = [self,]
         self.when_condition = None
 
-    def source(self, params):
-        assert issubclass(params["endpoint"], Source), "The source class should be a subclass of Source"
+    def source(self, endpoint, params=None):
+        if params is None:
+            params = {}
+        assert issubclass(endpoint, Source), "The source class should be a subclass of Source"
         assert self.builder_stack[-1].source_class is None, "There can only be one source in a pipeline"
-        self.builder_stack[-1].source_class = params["endpoint"]
+        self.builder_stack[-1].source_class = endpoint
         self.builder_stack[-1].source_params = params
         assert issubclass(self.builder_stack[-1].source_class, Source), "The source class should be a subclass of Source"
         return self
 
-    def to(self, params):
-        assert issubclass(params["endpoint"], Destination), "The destination class should be a subclass of Destination"
+    def to(self, endpoint, params=None):
+        if params is None:
+            params = {}
+        assert issubclass(endpoint, Destination), "The destination class should be a subclass of Destination"
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
-        to_class = params["endpoint"]
+        to_class = endpoint
         self.builder_stack[-1].to_list.append((to_class, params))
         return self
 
@@ -82,7 +84,9 @@ class DslPipelineBuilder(PipelineBuilder):
         self.destination_stack.pop()
         return self
 
-    def content_based_router(self, params= {}):
+    def content_based_router(self, params=None):
+        if params is None:
+            params = {}
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         assert isinstance(params, dict), "The parameters must be a dict"
         self.destination_stack.append({"type": ContentBasedRouter, "params": params})

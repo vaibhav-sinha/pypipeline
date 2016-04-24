@@ -10,7 +10,7 @@ class MulticastTest(unittest.TestCase):
     def test_simple_pipeline(self):
         plumber = Plumber()
         builder1 = DslPipelineBuilder()
-        pipeline1 = builder1.source({"endpoint": Timer, "period": 1.0}).multicast({"aggregate_method": aggregate}) \
+        pipeline1 = builder1.source(Timer, {"period": 1.0}).multicast({"aggregate_method": aggregate}) \
             .pipeline().process(lambda ex: print(ex.in_msg.body + " P11")).process(to_upper).process(lambda ex: print(ex.in_msg.body + " P12")).end_pipeline() \
             .pipeline().process(lambda ex: print(ex.in_msg.body + " P21")).end_pipeline() \
             .end_multicast().process(lambda ex: print(ex.in_msg.body + " Last"))
