@@ -5,7 +5,7 @@ class Source:
         self.params = params
 
     def start(self):
-        pass
+        raise NotImplementedError("Sources should implement their start method")
 
     def stop(self):
-        pass
+        raise NotImplementedError("Sources should implement their stop method")

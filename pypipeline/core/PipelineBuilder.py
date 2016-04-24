@@ -9,5 +9,5 @@ class PipelineBuilder:
     def build(self):
         raise NotImplementedError
 
-    def buildWithPlumber(self, plumber):
+    def build_with_plumber(self, plumber):
         raise NotImplementedError

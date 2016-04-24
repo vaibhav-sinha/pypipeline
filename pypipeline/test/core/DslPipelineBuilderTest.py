@@ -40,6 +40,14 @@ class DslPipelineDefinitionBuilderTest(unittest.TestCase):
         pipeline = builder.source("source1://test?name=s1").to("to1://t1").to("to2://t2").build()
         self.assertIsNotNone(pipeline.source.chain)
 
+    def test_multicast_dsl(self):
+        builder = DslPipelineBuilder()
+        builder.source("source1://s1").to("to1://t1").multicast({})\
+            .pipeline().to("to1://t11").to("to1://t12").end_pipeline()\
+            .pipeline().to("to1://t21").to("to1://t22").end_pipeline()\
+            .end_multicast().to("to1://t2")
+        self.assertIsNotNone(builder.builder_stack[-1])
+
 
 class Source1(Source):
     pass

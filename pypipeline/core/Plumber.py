@@ -27,7 +27,7 @@ class Plumber:
 
     def add_pipeline(self, pipeline):
         if isinstance(pipeline, PipelineBuilder):
-            pipeline = pipeline.buildWithPlumber(self)
+            pipeline = pipeline.build_with_plumber(self)
         if pipeline.id is None:
             pipeline.id = "pipeline" + str(len(self.pipelines) - 1)
         self.pipelines[pipeline.id] = pipeline
