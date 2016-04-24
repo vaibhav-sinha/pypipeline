@@ -9,6 +9,7 @@ from pypipeline.eip.split.Splitter import Splitter
 from pypipeline.eip.filter.Filter import Filter
 from pypipeline.eip.multicast.Multicast import Multicast
 from pypipeline.eip.aggregate.Aggregator import Aggregator
+from pypipeline.eip.cbr.ContentBasedRouter import ContentBasedRouter
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -17,6 +18,7 @@ class DslPipelineBuilder(PipelineBuilder):
         super().__init__()
         self.destination_stack = []
         self.builder_stack = [self,]
+        self.when_condition = None
 
     def source(self, params):
         assert issubclass(params["endpoint"], Source), "The source class should be a subclass of Source"
@@ -64,7 +66,7 @@ class DslPipelineBuilder(PipelineBuilder):
 
     def multicast(self, params):
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
-        assert isinstance(params, dict)
+        assert isinstance(params, dict), "The parameters must be a dict"
         if "aggregate_method" in params:
             aggregate_class = type("", (Aggregator,), {"aggregate": lambda self, old_exchange, current_exchange: params["aggregate_method"](old_exchange, current_exchange)})
         else:
@@ -80,17 +82,43 @@ class DslPipelineBuilder(PipelineBuilder):
         self.destination_stack.pop()
         return self
 
+    def content_based_router(self, params= {}):
+        assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
+        assert isinstance(params, dict), "The parameters must be a dict"
+        self.destination_stack.append({"type": ContentBasedRouter, "params": params})
+        return self
+
+    def end_content_based_router(self):
+        assert self.destination_stack[-1]["type"] == ContentBasedRouter
+        to_class = ContentBasedRouter
+        self.to_list.append((to_class, self.destination_stack[-1]["params"]))
+        self.destination_stack.pop()
+        return self
+
+    def when(self, condition):
+        assert self.builder_stack[-1].when_condition is None, "Another when block still not complete"
+        self.builder_stack[-1].when_condition = condition
+        return self
+
+    def otherwise(self):
+        assert self.builder_stack[-1].when_condition is None, "Another when block still not complete"
+        self.builder_stack[-1].when_condition = lambda ex: True
+        return self
+
     def pipeline(self):
         builder = DslPipelineBuilder()
         builder.source_class = DummySource
-        builder.source_uri = urlparse("dummy://dummy")
+        builder.source_params = {}
         self.builder_stack.append(builder)
         return self
 
     def end_pipeline(self):
         if self.destination_stack[-1]["type"] == Multicast:
             self.destination_stack[-1]["params"].setdefault('pipelines', []).append(self.builder_stack[-1])
-        self.builder_stack.pop()
+        pipeline = self.builder_stack.pop()
+        if self.destination_stack[-1]["type"] == ContentBasedRouter:
+            self.destination_stack[-1]["params"].setdefault('branches', []).append((self.builder_stack[-1].when_condition, pipeline))
+            self.builder_stack[-1].when_condition = None
         return self
 
     def id(self, name):

@@ -10,6 +10,8 @@ from pypipeline.eip.multicast.Multicast import Multicast
 from pypipeline.eip.multicast.MulticastProcessor import MulticastProcessor
 from pypipeline.eip.aggregate.Aggregator import Aggregator
 from pypipeline.eip.aggregate.AggregatorProcessor import AggregatorProcessor
+from pypipeline.eip.cbr.ContentBasedRouter import ContentBasedRouter
+from pypipeline.eip.cbr.ContentBasedRouterProcessor import ContentBasedRouterProcessor
 
 
 class Pipeline:
@@ -39,6 +41,9 @@ class Pipeline:
             if destination[0] == Multicast:
                 destination_obj = destination[0](plumber, destination[1])
                 processor = MulticastProcessor(destination_obj)
+            if destination[0] == ContentBasedRouter:
+                destination_obj = destination[0](plumber, destination[1])
+                processor = ContentBasedRouterProcessor(destination_obj)
             channel.next = processor
             if self.transient_previous is not None:
                 self.transient_previous.next = channel
