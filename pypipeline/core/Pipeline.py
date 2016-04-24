@@ -1,5 +1,3 @@
-from urllib.parse import parse_qs
-
 from .Channel import Channel
 from .Processor import Processor
 from .Status import Status
@@ -20,19 +18,14 @@ class Pipeline:
         self.plumber = plumber
         self.status = Status.stopped
         self.auto_start = builder.auto_start
-        source_params = parse_qs(builder.source_uri.query, True, False)
-        self.source = builder.source_class(plumber, source_params)
+        self.source = builder.source_class(plumber, builder.source_params)
         self.transient_previous = None
         for destination in builder.to_list:
             channel = Channel()
             if self.source.chain is None:
                 self.source.chain = channel
             if issubclass(destination[0], Destination):
-                if destination[1] is not None:
-                    destination_params = parse_qs(destination[1].query)
-                else:
-                    destination_params = {}
-                destination_obj = destination[0](plumber, destination_params)
+                destination_obj = destination[0](plumber, destination[1])
                 processor = Processor(destination_obj)
             if issubclass(destination[0], Splitter):
                 destination_obj = destination[0](plumber)

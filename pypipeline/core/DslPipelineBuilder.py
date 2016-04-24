@@ -1,7 +1,6 @@
 from urllib.parse import urlparse
 
 from pypipeline.core.DummySource import DummySource
-from . import EndpointRegistry
 from .Pipeline import Pipeline
 from .Source import Source
 from .Destination import Destination
@@ -19,45 +18,40 @@ class DslPipelineBuilder(PipelineBuilder):
         self.destination_stack = []
         self.builder_stack = [self,]
 
-    def source(self, endpoint):
-        assert isinstance(endpoint, str), "You need to provide an endpoint uri"
+    def source(self, params):
+        assert issubclass(params["endpoint"], Source), "The source class should be a subclass of Source"
         assert self.builder_stack[-1].source_class is None, "There can only be one source in a pipeline"
-        uri = urlparse(endpoint)
-        self.builder_stack[-1].source_class = EndpointRegistry.get_endpoint(uri.scheme)
-        self.builder_stack[-1].source_uri = uri
+        self.builder_stack[-1].source_class = params["endpoint"]
+        self.builder_stack[-1].source_params = params
         assert issubclass(self.builder_stack[-1].source_class, Source), "The source class should be a subclass of Source"
         return self
 
-    def to(self, endpoint):
-        assert isinstance(endpoint, str), "You need to provide an endpoint uri"
+    def to(self, params):
+        assert issubclass(params["endpoint"], Destination), "The destination class should be a subclass of Destination"
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
-        uri = urlparse(endpoint)
-        to_class = EndpointRegistry.get_endpoint(uri.scheme)
-        self.builder_stack[-1].to_list.append((to_class, uri))
+        to_class = params["endpoint"]
+        self.builder_stack[-1].to_list.append((to_class, params))
         return self
 
     def process(self, method):
         assert callable(method), "You need to provide a callable function"
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         to_class = type("", (Destination,), {"process": lambda self, exchange: method(exchange)})
-        uri = None
-        self.builder_stack[-1].to_list.append((to_class, uri))
+        self.builder_stack[-1].to_list.append((to_class, None))
         return self
 
     def split(self, method):
         assert callable(method), "You need to provide a callable function"
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         to_class = type("", (Splitter,), {"split": lambda self, exchange: method(exchange)})
-        uri = None
-        self.builder_stack[-1].to_list.append((to_class, uri))
+        self.builder_stack[-1].to_list.append((to_class, None))
         return self
 
     def filter(self, method):
         assert callable(method), "You need to provide a callable function"
         assert self.builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         to_class = type("", (Filter,), {"filter": lambda self, exchange: method(exchange)})
-        uri = None
-        self.builder_stack[-1].to_list.append((to_class, uri))
+        self.builder_stack[-1].to_list.append((to_class, None))
         return self
 
     def aggregate(self, params):

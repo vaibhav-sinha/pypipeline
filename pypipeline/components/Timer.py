@@ -8,7 +8,7 @@ from pypipeline.core.Message import Message
 class Timer(Source):
     def __init__(self, plumber, params):
         super().__init__(plumber, params)
-        self.period = float(params["period"][0])
+        self.period = float(params["period"])
         self.thread = None
 
     def start(self):
@@ -34,7 +34,10 @@ class TimerThread(threading.Thread):
     def run(self):
         while not self.stopped:
             time.sleep(self.period)
-            exchange = self.plumber.create_exchange()
+            if self.plumber is not None:
+                exchange = self.plumber.create_exchange()
+            else:
+                exchange = Exchange()
             message = Message()
             message.body = "This is exchange " + str(self.count)
             exchange.in_msg = message
