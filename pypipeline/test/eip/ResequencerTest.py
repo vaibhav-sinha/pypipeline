@@ -1,9 +1,10 @@
-import unittest
-from pypipeline.core.Plumber import Plumber
-from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
-from pypipeline.components.Timer import Timer
-import time
 import random
+import time
+import unittest
+
+from pypipeline.components.source.Timer import Timer
+from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
+from pypipeline.core.Plumber import Plumber
 
 
 class ResequencerTest(unittest.TestCase):

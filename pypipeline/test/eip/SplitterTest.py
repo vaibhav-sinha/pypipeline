@@ -1,9 +1,10 @@
+import time
 import unittest
-from pypipeline.core.Plumber import Plumber
+
+from pypipeline.components.source.Timer import Timer
 from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
 from pypipeline.core.Message import Message
-from pypipeline.components.Timer import Timer
-import time
+from pypipeline.core.Plumber import Plumber
 
 
 class SplitterTest(unittest.TestCase):

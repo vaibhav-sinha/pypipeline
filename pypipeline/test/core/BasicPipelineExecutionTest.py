@@ -1,8 +1,9 @@
-import unittest
-from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
-from pypipeline.core.Destination import Destination
-from pypipeline.components.Timer import Timer
 import time
+import unittest
+
+from pypipeline.components.source.Timer import Timer
+from pypipeline.core.Destination import Destination
+from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
 
 
 class BasicPipelineExecutionTest(unittest.TestCase):
