@@ -11,6 +11,8 @@ from pypipeline.eip.cbr.ContentBasedRouter import ContentBasedRouter
 from pypipeline.eip.routing_slip.RoutingSlip import RoutingSlip
 from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
 from pypipeline.eip.resequence.Resequencer import Resequencer
+from pypipeline.eip.validate.Validator import Validator
+from pypipeline.eip.validate.ValidatorProcessor import ValidatorProcessor
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -58,6 +60,13 @@ class DslPipelineBuilder(PipelineBuilder):
         assert callable(method), "You need to provide a callable function"
         assert self._builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
         to_class = type("", (Filter,), {"filter": lambda self, exchange: method(exchange)})
+        self._builder_stack[-1].to_list.append((to_class, None))
+        return self
+
+    def validate(self, method):
+        assert callable(method), "You need to provide a callable function"
+        assert self._builder_stack[-1].source_class is not None, "Pipeline definition must start with a source"
+        to_class = type("", (Validator,), {"validate": lambda self, exchange: method(exchange)})
         self._builder_stack[-1].to_list.append((to_class, None))
         return self
 

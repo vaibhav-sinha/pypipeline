@@ -18,6 +18,8 @@ from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
 from pypipeline.eip.dynamic_router.DynamicRouterProcessor import DynamicRouterProcessor
 from pypipeline.eip.resequence.Resequencer import Resequencer
 from pypipeline.eip.resequence.ResequencerProcessor import ResequencerProcessor
+from pypipeline.eip.validate.Validator import Validator
+from pypipeline.eip.validate.ValidatorProcessor import ValidatorProcessor
 
 
 class Pipeline:
@@ -50,6 +52,9 @@ class Pipeline:
             if issubclass(destination[0], DynamicRouter):
                 destination_obj = destination[0](plumber, destination[1])
                 processor = DynamicRouterProcessor(destination_obj)
+            if issubclass(destination[0], Validator):
+                destination_obj = destination[0](plumber)
+                processor = ValidatorProcessor(destination_obj)
             if destination[0] == Multicast:
                 destination_obj = destination[0](plumber, destination[1])
                 processor = MulticastProcessor(destination_obj)

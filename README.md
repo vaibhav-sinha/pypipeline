@@ -4,7 +4,9 @@
 
 [![Build Status](https://travis-ci.org/vaibhav-sinha/pypipeline.svg?branch=master)](https://travis-ci.org/vaibhav-sinha/pypipeline)
 
-PyPipeline is meant to be a lightweight ESB, configurable via an intutive DSL. PyPipeline implements many of the [Enterprise Integration Patterns](http://www.eaipatterns.com/toc.html). Currently supported EIPs are:
+PyPipeline is meant to be a lightweight ESB, configurable via an intutive DSL. PyPipeline implements many of the [Enterprise Integration Patterns](http://www.eaipatterns.com/toc.html).
+
+Currently supported EIPs are:
 
 * Filter
 * Aggregator
@@ -14,3 +16,14 @@ PyPipeline is meant to be a lightweight ESB, configurable via an intutive DSL. P
 * Routing Slip
 * Dynamic Router
 * Resequencer
+* Validator
+
+Following EIPs can be implemented using the patterns listed above:
+
+* Recipient List
+* Composed Message Processor
+* Scatter Gather
+* Content Enricher
+* Content Filter
+* Claim Check
+* Normalizer
