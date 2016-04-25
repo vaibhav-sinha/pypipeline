@@ -12,6 +12,10 @@ from pypipeline.eip.aggregate.Aggregator import Aggregator
 from pypipeline.eip.aggregate.AggregatorProcessor import AggregatorProcessor
 from pypipeline.eip.cbr.ContentBasedRouter import ContentBasedRouter
 from pypipeline.eip.cbr.ContentBasedRouterProcessor import ContentBasedRouterProcessor
+from pypipeline.eip.routing_slip.RoutingSlip import RoutingSlip
+from pypipeline.eip.routing_slip.RoutingSlipProcessor import RoutingSlipProcessor
+from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
+from pypipeline.eip.dynamic_router.DynamicRouterProcessor import DynamicRouterProcessor
 
 
 class Pipeline:
@@ -38,6 +42,12 @@ class Pipeline:
             if issubclass(destination[0], Aggregator):
                 destination_obj = destination[0](plumber, destination[1])
                 processor = AggregatorProcessor(destination_obj)
+            if issubclass(destination[0], RoutingSlip):
+                destination_obj = destination[0](plumber, destination[1])
+                processor = RoutingSlipProcessor(destination_obj)
+            if issubclass(destination[0], DynamicRouter):
+                destination_obj = destination[0](plumber, destination[1])
+                processor = DynamicRouterProcessor(destination_obj)
             if destination[0] == Multicast:
                 destination_obj = destination[0](plumber, destination[1])
                 processor = MulticastProcessor(destination_obj)

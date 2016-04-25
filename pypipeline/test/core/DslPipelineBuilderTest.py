@@ -39,7 +39,7 @@ class DslPipelineDefinitionBuilderTest(unittest.TestCase):
             .pipeline().to(To1).to(To1).end_pipeline()\
             .pipeline().to(To1).to(To1).end_pipeline()\
             .end_multicast().to(To1)
-        self.assertIsNotNone(builder.builder_stack[-1])
+        self.assertIsNotNone(builder._builder_stack[-1])
 
 
 class Source1(Source):
