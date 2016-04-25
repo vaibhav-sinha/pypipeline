@@ -9,7 +9,7 @@ from pypipeline.core.Plumber import Plumber
 
 class WiretapTest(unittest.TestCase):
 
-    def test_log(self):
+    def test_wiretap(self):
         plumber = Plumber()
         builder = DslPipelineBuilder()
         pipeline = builder.source(Timer, {"period": 1.0}).wiretap((Log, {"name": "wiretap"})).to(Log, {"name": "actual"})

@@ -1,4 +1,5 @@
 from pypipeline.core.Destination import Destination
+from pypipeline.util import ExchangeUtil
 
 
 class Channel:
@@ -14,7 +15,8 @@ class Channel:
     def process(self, exchange):
         try:
             if self.wiretap is not None:
-                self.wiretap.process(exchange)
+                exchange_copy = ExchangeUtil.copy_exchange(exchange)
+                self.wiretap.process(exchange_copy)
             self.next.process(exchange)
         except Exception as e:
             raise e
