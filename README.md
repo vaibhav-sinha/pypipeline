@@ -13,3 +13,4 @@ PyPipeline is meant to be a lightweight ESB, configurable via an intutive DSL. P
 * Content Based Router
 * Routing Slip
 * Dynamic Router
+* Resequencer

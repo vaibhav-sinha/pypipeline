@@ -17,10 +17,6 @@ class AggregatorTest(unittest.TestCase):
         plumber.stop()
 
 
-def to_upper(exchange):
-    exchange.in_msg.body = exchange.in_msg.body.upper()
-
-
 def aggregate(old_exchange, current_exchange):
     if old_exchange is not None:
         current_exchange.in_msg.body += old_exchange.in_msg.body

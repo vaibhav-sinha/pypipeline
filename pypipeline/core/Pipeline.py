@@ -16,6 +16,8 @@ from pypipeline.eip.routing_slip.RoutingSlip import RoutingSlip
 from pypipeline.eip.routing_slip.RoutingSlipProcessor import RoutingSlipProcessor
 from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
 from pypipeline.eip.dynamic_router.DynamicRouterProcessor import DynamicRouterProcessor
+from pypipeline.eip.resequence.Resequencer import Resequencer
+from pypipeline.eip.resequence.ResequencerProcessor import ResequencerProcessor
 
 
 class Pipeline:
@@ -54,6 +56,9 @@ class Pipeline:
             if destination[0] == ContentBasedRouter:
                 destination_obj = destination[0](plumber, destination[1])
                 processor = ContentBasedRouterProcessor(destination_obj)
+            if destination[0] == Resequencer:
+                destination_obj = destination[0](plumber, destination[1])
+                processor = ResequencerProcessor(destination_obj)
             channel.next = processor
             if self.transient_previous is not None:
                 self.transient_previous.next = channel

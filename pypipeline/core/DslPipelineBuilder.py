@@ -10,6 +10,7 @@ from pypipeline.eip.aggregate.Aggregator import Aggregator
 from pypipeline.eip.cbr.ContentBasedRouter import ContentBasedRouter
 from pypipeline.eip.routing_slip.RoutingSlip import RoutingSlip
 from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
+from pypipeline.eip.resequence.Resequencer import Resequencer
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -65,6 +66,13 @@ class DslPipelineBuilder(PipelineBuilder):
         assert callable(params["method"]), "You need to provide a callable method"
         assert ~("timeout" not in params and "count" not in params), "You need to provide atlease one termination condition: timeout, count"
         to_class = type("", (Aggregator,), {"aggregate": lambda self, old_exchange, current_exchange: params["method"](old_exchange, current_exchange)})
+        self._builder_stack[-1].to_list.append((to_class, params))
+        return self
+
+    def resequencer(self, params):
+        assert "key_extractor" in params, "You need to provide the key_extractor to use for resequencer"
+        assert ~("timeout" not in params and "count" not in params), "You need to provide atlease one termination condition: timeout, count"
+        to_class = Resequencer
         self._builder_stack[-1].to_list.append((to_class, params))
         return self
 

@@ -8,28 +8,18 @@ class AggregatorProcessor(Processor):
         super().__init__(None)
         self.aggregator = aggregator
         self.previous = None
-        if "timeout" in aggregator.params:
-            self.timeout = aggregator.params["timeout"]
+        if aggregator.timeout is not None:
             self.time = time.time()
-        else:
-            self.timeout = None
-
-        if "count" in aggregator.params:
-            self.count = aggregator.params["count"]
+        if aggregator.count is not None:
             self.current_count = 0
-        else:
-            self.count = None
-
-        if self.count is None and self.timeout is None:
-            raise ValueError("Atleast one of two terminating conditions must be specified: count, timeout")
 
     def _process(self, exchange):
         self.current_count += 1
         self.previous = self.aggregator.aggregate(self.previous, exchange)
-        if self.count is not None and self.current_count == self.count:
+        if self.aggregator.count is not None and self.current_count == self.aggregator.count:
             self.forward(self.previous)
             return
-        if self.timeout is not None and time.time() - self.time >= self.timeout:
+        if self.aggregator.timeout is not None and time.time() - self.time >= self.aggregator.timeout:
             self.forward(self.previous)
             return
 
