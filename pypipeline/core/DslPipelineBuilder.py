@@ -12,7 +12,7 @@ from pypipeline.eip.routing_slip.RoutingSlip import RoutingSlip
 from pypipeline.eip.dynamic_router.DynamicRouter import DynamicRouter
 from pypipeline.eip.resequence.Resequencer import Resequencer
 from pypipeline.eip.validate.Validator import Validator
-from pypipeline.eip.validate.ValidatorProcessor import ValidatorProcessor
+from pypipeline.eip.wiretap.Wiretap import Wiretap
 
 
 class DslPipelineBuilder(PipelineBuilder):
@@ -160,6 +160,10 @@ class DslPipelineBuilder(PipelineBuilder):
 
     def id(self, name):
         self.id = name
+
+    def wiretap(self, endpoint):
+        self._builder_stack[-1].to_list.append((Wiretap, endpoint))
+        return self
 
     def auto_start(self, value):
         assert isinstance(value, bool), "auto_start parameter accepts only boolean values"

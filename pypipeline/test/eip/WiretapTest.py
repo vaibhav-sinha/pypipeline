@@ -7,12 +7,12 @@ from pypipeline.core.DslPipelineBuilder import DslPipelineBuilder
 from pypipeline.core.Plumber import Plumber
 
 
-class LogTest(unittest.TestCase):
+class WiretapTest(unittest.TestCase):
 
     def test_log(self):
         plumber = Plumber()
         builder = DslPipelineBuilder()
-        pipeline = builder.source(Timer, {"period": 1.0}).to(Log, {"name": "test"})
+        pipeline = builder.source(Timer, {"period": 1.0}).wiretap((Log, {"name": "wiretap"})).to(Log, {"name": "actual"})
         plumber.add_pipeline(pipeline)
         plumber.start()
         time.sleep(1)

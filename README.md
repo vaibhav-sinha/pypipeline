@@ -17,6 +17,7 @@ Currently supported EIPs are:
 * Dynamic Router
 * Resequencer
 * Validator
+* Wiretap
 
 Following EIPs can be implemented using the patterns listed above:
 
@@ -27,3 +28,5 @@ Following EIPs can be implemented using the patterns listed above:
 * Content Filter
 * Claim Check
 * Normalizer
+* Detour
+* Log

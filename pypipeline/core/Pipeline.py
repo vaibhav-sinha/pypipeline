@@ -20,6 +20,7 @@ from pypipeline.eip.resequence.Resequencer import Resequencer
 from pypipeline.eip.resequence.ResequencerProcessor import ResequencerProcessor
 from pypipeline.eip.validate.Validator import Validator
 from pypipeline.eip.validate.ValidatorProcessor import ValidatorProcessor
+from pypipeline.eip.wiretap.Wiretap import Wiretap
 
 
 class Pipeline:
@@ -30,8 +31,12 @@ class Pipeline:
         self.auto_start = builder.auto_start
         self.source = builder.source_class(plumber, builder.source_params)
         self.transient_previous = None
+        self.wiretap = None
         for destination in builder.to_list:
-            channel = Channel()
+            if destination[0] == Wiretap:
+                self.wiretap = destination[1]
+                continue
+            channel = Channel(self.plumber, {"wiretap": self.wiretap})
             if self.source.chain is None:
                 self.source.chain = channel
             if issubclass(destination[0], Destination):
@@ -68,6 +73,7 @@ class Pipeline:
             if self.transient_previous is not None:
                 self.transient_previous.next = channel
             self.transient_previous = processor
+            self.wiretap = None
 
     def start(self):
         self.status = Status.starting
