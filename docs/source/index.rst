@@ -56,8 +56,7 @@ Concepts:
 
 .. toctree::
    :maxdepth: 4
+
    core
-   eip
-   component
 
 

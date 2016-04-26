@@ -51,10 +51,12 @@ Following EIPs can be implemented using the patterns listed above:
 * Detour
 * Log
 
-Contents:
+Concepts:
 =========
 
 .. toctree::
    :maxdepth: 4
+
+   core
 
 
