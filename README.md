@@ -30,3 +30,27 @@ Following EIPs can be implemented using the patterns listed above:
 * Normalizer
 * Detour
 * Log
+
+
+## Getting Started
+
+Creating pipelines with PyPipeline is very simple. Here is an example to a pipeline in which a timer generates a data packet every one second which is then sent to a filter, and finally the packets which are not filtered out go to a log component which prints them on the console
+
+    class FilterTest(unittest.TestCase):
+
+        def test_simple_pipeline(self):
+            builder = DslPipelineBuilder()
+            pipeline = builder.source(Timer, {"period": 1.0}).filter(filter_method).process(Log, {"name": "test"}).build()
+            pipeline.start()
+            time.sleep(10)
+            pipeline.stop()
+
+
+    def filter_method(exchange):
+        parts = exchange.in_msg.body.split()
+        return int(parts[-1]) % 2 == 0
+
+
+## Documentation
+
+The documentation can be found at [PyPipeline Documentation](http://pypipeline-esb.readthedocs.org/en/latest/)
