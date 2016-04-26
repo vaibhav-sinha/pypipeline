@@ -1,0 +1,148 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>PyPipeline’s - ESB for Python &mdash; PyPipeline 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="PyPipeline 1.0.0 documentation" href="#" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">PyPipeline 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="pypipeline-s-esb-for-python">
+<h1>PyPipeline&#8217;s - ESB for Python<a class="headerlink" href="#pypipeline-s-esb-for-python" title="Permalink to this headline">¶</a></h1>
+<p>PyPipeline is an Enterprise Service Bus for Python. It is inspired from the Apache Camel project for Java. Like Camel,
+PyPipeline provides an intuitive Domain Specific Language to build a pipeline.</p>
+<p>Here is an example which creates and runs a pipeline:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">builder</span> <span class="o">=</span> <span class="n">DslPipelineBuilder</span><span class="p">()</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">builder</span><span class="o">.</span><span class="n">source</span><span class="p">(</span><span class="n">Timer</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;period&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">})</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">Log</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">pipeline</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>In the example, an instance of DslPipelineBuilder is created (This is the only PipelineBuilder implementation
+available right now. Later a YAML based PipelineBuilder might be added), which is used to specify the pipeline structure.</p>
+<p>For any pipeline, a source is needed, which produces data that is to be sent down the pipe. In the example, the source is
+a Timer which is configured to produce data every 1 second. The data is then sent to a Log Destination, which prints the
+data to standard out.</p>
+<p>The pipeline is then started, which triggers the Timer to start sending data. After 10 seconds, the pipeline is stopped.</p>
+</div>
+<div class="section" id="enterprise-integration-patterns">
+<h1>Enterprise Integration Patterns<a class="headerlink" href="#enterprise-integration-patterns" title="Permalink to this headline">¶</a></h1>
+<p>PyPipeline intends to support all of patterns from the Enterprise Integration Patterns book by Gregor Hohpe and Booby Woolf.</p>
+<p>Currently the following patterns are supported</p>
+<ul class="simple">
+<li>Filter</li>
+<li>Aggregator</li>
+<li>Splitter</li>
+<li>Multicast</li>
+<li>Content Based Router</li>
+<li>Routing Slip</li>
+<li>Dynamic Router</li>
+<li>Resequencer</li>
+<li>Validator</li>
+<li>Wiretap</li>
+</ul>
+<p>Following EIPs can be implemented using the patterns listed above:</p>
+<ul class="simple">
+<li>Recipient List</li>
+<li>Composed Message Processor</li>
+<li>Scatter Gather</li>
+<li>Content Enricher</li>
+<li>Content Filter</li>
+<li>Claim Check</li>
+<li>Normalizer</li>
+<li>Detour</li>
+<li>Log</li>
+</ul>
+</div>
+<div class="section" id="contents">
+<h1>Contents:<a class="headerlink" href="#contents" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul class="simple">
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">PyPipeline&#8217;s - ESB for Python</a></li>
+<li><a class="reference internal" href="#enterprise-integration-patterns">Enterprise Integration Patterns</a></li>
+<li><a class="reference internal" href="#contents">Contents:</a></li>
+</ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="#">PyPipeline 1.0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, Vaibhav Sinha.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.1.
+    </div>
+  </body>
+</html>
