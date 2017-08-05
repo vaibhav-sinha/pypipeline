@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name = "pypipeline-esb",
@@ -9,10 +9,11 @@ setup(
     author_email = "vaibhavsinh@gmail.com",
     url = "https://github.com/vaibhav-sinha/pypipeline",
     keywords = ["esb", "eip", "pipeline"],
+    python_requires='>=3',
     classifiers = [
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Development Status :: 1 - Pre Alpha",
+        "Development Status :: 4 - Beta",
         "Environment :: Other Environment",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
@@ -22,6 +23,4 @@ setup(
     long_description = """\
 PyPipeline is meant to be a lightweight ESB, configurable via an intutive DSL. PyPipeline implements many of the Enterprise Integration Patterns.
 """,
-    install_requires=[
-    ],
 )
