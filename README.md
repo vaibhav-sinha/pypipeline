@@ -31,6 +31,9 @@ Following EIPs can be implemented using the patterns listed above:
 * Detour
 * Log
 
+## Installation
+
+    pip install pypiline-esb
 
 ## Getting Started
 
